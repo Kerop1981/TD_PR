@@ -1,9 +1,44 @@
- type TodoStatus = 'active'| 'completed'|'archived'
+/**
+ * Возможные статусы задачи.
+ * - `'active'`: задача в работе
+ * - `'completed'`: задача выполнена
+ * - `'archived'`: задача перемещена в архив
+ */
+export type TodoStatus = 'active' | 'completed' | 'archived';
 
+/**
+ * Модель элемента списка задач (ToDo).
+ */
 export interface TodoItem {
-    id:string;
-    title:string;
-    status: TodoStatus;
-    createdAt?: string;
-    dueDate?: string;
+  /**
+   * Уникальный идентификатор задачи.
+   */
+  id: string;
+
+  /**
+   * Заголовок или краткое описание задачи.
+   */
+  title: string;
+
+  /**
+   * Флаг, указывающий, завершена ли задача.
+   */
+  completed: boolean;
+
+  /**
+   * Статус задачи (активная, завершена, архив).
+   */
+  status: TodoStatus;
+
+  /**
+   * Дата создания задачи (опционально).
+   * В формате ISO-строки, например: "2025-06-16T15:00:00Z".
+   */
+  createdAt?: string;
+
+  /**
+   * Срок выполнения задачи (опционально).
+   * Также в формате ISO-строки.
+   */
+  dueDate?: string;
 }
