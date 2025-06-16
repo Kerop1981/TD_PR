@@ -1,6 +1,8 @@
+ type TodoStatus = 'active'| 'completed'|'archived'
 
-export interface Todo {
+export interface TodoItem {
     id:string;
     title:string;
     completed:boolean;
+    status: TodoStatus;
 }

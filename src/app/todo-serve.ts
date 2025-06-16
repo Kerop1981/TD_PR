@@ -1,37 +1,51 @@
 import { Injectable } from '@angular/core';
-import { Todo } from './models/todo.model';
+import { TodoItem } from './models/todo.model'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-  private todus: Todo[] = [];
+  private todos: TodoItem[] = [];
 
-  //получаю список задач
-  getTodos(): Todo[] {
-    return this.todus;
+  // Генерация ID по времени
+  private generateId(): string {
+    return Date.now().toString();
   }
 
-  //Добавить зодачу
-  addTodo(title: string):void {
-    const newTodo: Todo = {
-      id: Date.now().toString(),
+  // Добавить новую задачу
+  addTodo(title: string): void {
+    const newTodo: TodoItem = {
+      id: this.generateId(),
       title,
+      status: 'active',
       completed: false
     };
-    this.todus.push(newTodo)
+    this.todos.push(newTodo);
   }
 
-  //Удалить задачу
-  deleteTodo(id:string):void{
-    this.todus = this.todus.filter(todo => todo.id === id);
-  }
-
-  //Переключить статус задачи
-  toggleTodo(id: string): void{
-    const todo = this.todus.find(t => t.id === id);
-    if(todo){
-      todo.completed = todo.completed
+  // Изменить статус задачи
+  updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
+    const todo = this.todos.find(t => t.id === id);
+    if (todo) {
+      todo.status = newStatus;
     }
+  }
+
+  // Редактировать название задачи
+  editTitle(id: string, newTitle: string): void {
+    const todo = this.todos.find(t => t.id === id);
+    if (todo) {
+      todo.title = newTitle;
+    }
+  }
+
+  // Удалить задачу
+  deleteTodo(id: string): void {
+    this.todos = this.todos.filter(t => t.id !== id);
+  }
+
+  // Получить список задач
+  getTodos(): TodoItem[] {
+    return this.todos;
   }
 }
