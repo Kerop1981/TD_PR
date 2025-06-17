@@ -1,1 +1,14 @@
-<p>todo-component works!</p>
+
+<div class="todo-container">
+    <h2>Мой список дел</h2>
+
+    <input [(ngModel)]="newTitle" placeholder="Новая задача">
+    <button (click)="addTodo()">Добавить</button>
+
+    <ul>
+        <li *ngFor="let todo of todos">
+            {{todo.title}}
+            <button (click)="deleteTodo(todo.id)">Удалить</button>
+        </li>
+    </ul>
+</div>
