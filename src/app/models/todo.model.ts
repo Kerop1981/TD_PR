@@ -1,10 +1,12 @@
- type TodoStatus = 'active'| 'completed'|'archived'
+type TodoStatus = 'active' | 'completed' | 'archived';
 
+/**
+ * Интерфейс задачи
+ */
 export interface TodoItem {
-    id:string;
-    title:string;
-    completed:boolean;
-    status: TodoStatus;
-    createdAt?: string;
-    dueDate?: string;
+  id: string;
+  title: string;
+  status: TodoStatus;
+  createdAt?: string;
+  dueDate?: string;
 }

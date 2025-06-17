@@ -24,7 +24,7 @@ export class TodoService {
       id: this.generateId(),
       title,
       status: 'active',
-      completed: false
+      
     };
     this.todos.push(newTodo);
   }
