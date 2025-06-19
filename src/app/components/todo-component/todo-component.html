@@ -1,14 +1,36 @@
-
 <div class="todo-container">
-    <h2>Мой список дел</h2>
+  <h1>Список задач</h1>
 
-    <input [(ngModel)]="newTitle" placeholder="Новая задача">
-    <button (click)="addTodo()">Добавить</button>
+  <input [(ngModel)]="newTitle" placeholder="Новая задача" />
+  <button (click)="addTodo()">Добавить</button>
 
-    <ul>
-        <li *ngFor="let todo of todos">
-            {{todo.title}}
-            <button (click)="deleteTodo(todo.id)">Удалить</button>
-        </li>
-    </ul>
+  <!-- Фильтр по статусу -->
+  <div>
+    <label for="filter">Фильтр по статусу:</label>
+    <select id="filter" [(ngModel)]="selectedStatus">
+      <option value="all">Все</option>
+      <option value="active">Активные</option>
+      <option value="completed">Завершённые</option>
+      <option value="archived">Архив</option>
+    </select>
+  </div>
+
+  <ul>
+    <li *ngFor="let todo of filteredTodos">
+      <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
+
+      <select [(ngModel)]="todo.status" (change)="updateStatus(todo.id, todo.status)">
+        <option value="active">Активна</option>
+        <option value="completed">Выполнена</option>
+        <option value="archived">Архив</option>
+      </select>
+
+      <div class="meta">
+        <span>Создана: {{ todo.createdAt || '—' }}</span>
+        <span>Дедлайн: {{ todo.dueDate || '—' }}</span>
+      </div>
+
+      <button (click)="deleteTodo(todo.id)">Удалить</button>
+    </li>
+  </ul>
 </div>

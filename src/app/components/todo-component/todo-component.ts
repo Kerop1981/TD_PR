@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TodoService } from '../../todo-serve'; 
 import { TodoItem } from '../../models/todo.model';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-todo',
@@ -14,6 +15,8 @@ import { TodoItem } from '../../models/todo.model';
 export class TodoComponent {
   /** Массив всех задач */
   todos: TodoItem[] = [];
+
+  selectedStatus: 'all'| 'active'|'completed'|'archived' = 'all';
 
   /** Введённый заголовок новой задачи */
   newTitle: string = '';
@@ -48,5 +51,18 @@ export class TodoComponent {
   deleteTodo(id: string): void {
     this.todoService.deleteTodo(id);
     this.todos = this.todoService.getTodos();
+  }
+
+  updateStatus(id:string,status:TodoItem['status']):void {
+    this.todoService.updateStatus(id,status)
+  }
+
+  editTitle( id:string, newTitle:string):void{
+    this.todoService.editTitle(id,newTitle.trim());
+  }
+
+  get filteredTodos(): TodoItem[]{
+    if (this.selectedStatus === 'all') return this.todos;
+    return this.todos.filter(todos => todos.status === this.selectedStatus);
   }
 }
