@@ -16,6 +16,8 @@ export class TodoComponent {
   /** Массив всех задач */
   todos: TodoItem[] = [];
 
+  selectedStatus: 'all'| 'active'|'completed'|'archived' = 'all';
+
   /** Введённый заголовок новой задачи */
   newTitle: string = '';
 
@@ -57,5 +59,10 @@ export class TodoComponent {
 
   editTitle( id:string, newTitle:string):void{
     this.todoService.editTitle(id,newTitle.trim());
+  }
+
+  get filteredTodos(): TodoItem[]{
+    if (this.selectedStatus === 'all') return this.todos;
+    return this.todos.filter(todos => todos.status === this.selectedStatus);
   }
 }

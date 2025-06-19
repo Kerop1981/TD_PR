@@ -4,10 +4,21 @@
   <input [(ngModel)]="newTitle" placeholder="Новая задача" />
   <button (click)="addTodo()">Добавить</button>
 
+  <!-- Фильтр по статусу -->
+  <div>
+    <label for="filter">Фильтр по статусу:</label>
+    <select id="filter" [(ngModel)]="selectedStatus">
+      <option value="all">Все</option>
+      <option value="active">Активные</option>
+      <option value="completed">Завершённые</option>
+      <option value="archived">Архив</option>
+    </select>
+  </div>
+
   <ul>
-    <li *ngFor="let todo of todos">
+    <li *ngFor="let todo of filteredTodos">
       <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
-      
+
       <select [(ngModel)]="todo.status" (change)="updateStatus(todo.id, todo.status)">
         <option value="active">Активна</option>
         <option value="completed">Выполнена</option>
