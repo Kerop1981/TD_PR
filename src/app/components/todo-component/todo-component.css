@@ -1,14 +1,25 @@
-.todo-container{
-    max-width: 500px;
-    margin: 2rem auto;
+.todo-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 1rem;
+  font-family: sans-serif;
 }
 
-input {
-  width: 70%;
-  padding: 0.5rem;
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ccc;
+}
+
+input, select {
   margin-right: 1rem;
 }
 
-button {
-  padding: 0.5rem 1rem;
+.meta {
+  font-size: 0.8rem;
+  color: #777;
 }

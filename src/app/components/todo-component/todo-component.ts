@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TodoService } from '../../todo-serve'; 
 import { TodoItem } from '../../models/todo.model';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-todo',
@@ -48,5 +49,13 @@ export class TodoComponent {
   deleteTodo(id: string): void {
     this.todoService.deleteTodo(id);
     this.todos = this.todoService.getTodos();
+  }
+
+  updateStatus(id:string,status:TodoItem['status']):void {
+    this.todoService.updateStatus(id,status)
+  }
+
+  editTitle( id:string, newTitle:string):void{
+    this.todoService.editTitle(id,newTitle.trim());
   }
 }
