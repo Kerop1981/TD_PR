@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { TodoService } from '../../todo-serve';
+import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TodoService } from '../../todo-serve'; 
-import { TodoItem } from '../../models/todo.model';
-
 
 @Component({
   selector: 'app-todo',
@@ -12,67 +11,49 @@ import { TodoItem } from '../../models/todo.model';
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css'
 })
-export class TodoComponent {
-  /** Массив всех задач */
+export class TodoComponent implements OnInit {
   todos: TodoItem[] = [];
-
-  selectedStatus: 'all'| 'active'|'completed'|'archived' = 'all';
-
-  /** Введённый заголовок новой задачи */
   newTitle: string = '';
+  newDueDate?: string;
+  selectedStatus: string = 'all';
 
-  newDueDate: string = '';
-
-  /**
-   * @param todoService Сервис для работы с задачами
-   */
   constructor(private todoService: TodoService) {}
 
-  /**
-   * Инициализация компонента — загружаем список задач
-   */
   ngOnInit(): void {
-    this.todos = this.todoService.getTodos();
+    this.todos = this.todoService.getTodos(); 
   }
 
-  /**
-   * Добавляет новую задачу в список, если поле не пустое
-   */
+  get filteredTodos(): TodoItem[] {
+    if (this.selectedStatus === 'all') return this.todos;
+    return this.todos.filter(todo => todo.status === this.selectedStatus);
+  }
+
   addTodo(): void {
     if (!this.newTitle.trim()) return;
 
-    this.todoService.addTodo(this.newTitle.trim());
+    this.todoService.addTodo(this.newTitle.trim(), this.newDueDate);
+    this.todos = this.todoService.getTodos(); 
     this.newTitle = '';
     this.newDueDate = '';
-    this.todos = this.todoService.getTodos();
-  
-
   }
 
-  /**
-   * Удаляет задачу по её ID
-   * @param id Идентификатор задачи
-   */
+  editTitle(id: string, newTitle: string): void {
+    this.todoService.editTitle(id, newTitle);
+    this.todos = this.todoService.getTodos();
+  }
+
   deleteTodo(id: string): void {
     this.todoService.deleteTodo(id);
     this.todos = this.todoService.getTodos();
   }
 
-  updateStatus(id:string,status:TodoItem['status']):void {
-    this.todoService.updateStatus(id,status)
+  updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
+    this.todoService.updateStatus(id, newStatus);
+    this.todos = this.todoService.getTodos();
   }
 
-  editTitle( id:string, newTitle:string):void{
-    this.todoService.editTitle(id,newTitle.trim());
-  }
-
-  get filteredTodos(): TodoItem[]{
-    if (this.selectedStatus === 'all') return this.todos;
-    return this.todos.filter(todos => todos.status === this.selectedStatus);
-  }
-
-  updateDueDate(id: string, dueDate: string):void{
-    this.todoService.updateDueDate(id,dueDate)
+  updateDueDate(id: string, newDueDate: string): void {
+    this.todoService.updateDueDate(id, newDueDate);
     this.todos = this.todoService.getTodos();
   }
 }
