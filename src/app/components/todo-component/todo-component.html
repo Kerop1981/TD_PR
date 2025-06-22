@@ -25,7 +25,7 @@
 
   <button (click)="clearCompleted()">Очистить выполненые</button>
   <ul>
-  <li *ngFor="let todo of filteredTodos" [ngClass]="{
+  <li *ngFor="let todo of todos " [ngClass]="{
     'completed': todo.status === 'completed',
     'archived':todo.status === 'archived'
   }">
