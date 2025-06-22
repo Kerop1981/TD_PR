@@ -25,10 +25,6 @@ export class TodoComponent implements OnInit {
     this.todos = this.todoService.getTodos(); 
   }
 
-  // get filteredTodos(): TodoItem[] {
-  //   if (this.selectedStatus === 'all') return this.todos;
-  //   return this.todos.filter(todo => todo.status === this.selectedStatus);
-  // }
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
