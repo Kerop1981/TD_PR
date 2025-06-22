@@ -70,4 +70,9 @@ export class TodoComponent {
     if (this.selectedStatus === 'all') return this.todos;
     return this.todos.filter(todos => todos.status === this.selectedStatus);
   }
+
+  updateDueDate(id: string, dueDate: string):void{
+    this.todoService.updateDueDate(id,dueDate)
+    this.todos = this.todoService.getTodos();
+  }
 }

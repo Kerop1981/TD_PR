@@ -24,8 +24,8 @@ export class TodoService {
       id: this.generateId(),
       title,
       status: 'active',
-      createdAt: new Date().toISOString(),
-      dueDate: dueDate || undefined
+      createdAt: new Date().toISOString().split('T')[0],
+      dueDate: dueDate || ''
       
     };
     this.todos.push(newTodo);
@@ -69,5 +69,12 @@ export class TodoService {
    */
   getTodos(): TodoItem[] {
     return this.todos;
+  }
+
+  updateDueDate(id: string, newdueDate:string):void{
+    const todo = this.todos.find(t => t.id === id);
+    if (todo){
+      todo.dueDate = newdueDate
+    }
   }
 }
