@@ -25,3 +25,14 @@ input, select {
   font-size: 0.8rem;
   color: #777;
 }
+
+
+.completed {
+  text-decoration: line-through;
+  color:#888
+}
+
+.archived{
+  opacity: 0.5;
+  pointer-events: none;
+}
