@@ -1,57 +1,59 @@
 <div class="todo-container">
-  <h1>Список задач</h1>
+  <h1>📋 Список задач</h1>
 
-  <input [(ngModel)]="newTitle" placeholder="Новая задача" />
-  <input type="date" [(ngModel)]="newDueDate">
-  <button (click)="addTodo()">Добавить</button>
+  <!-- Добавление новой задачи -->
+  <div class="form-row">
+    <input [(ngModel)]="newTitle" placeholder="Новая задача" />
+    <input type="date" [(ngModel)]="newDueDate" />
+    <button (click)="addTodo()">Добавить</button>
+  </div>
 
-  <!-- Фильтр по статусу -->
-  <div>
-    <label for="filter">Фильтр по статусу:</label>
+  <!-- Фильтр -->
+  <div class="filter-row">
+    <label for="filter">Фильтр:</label>
     <select id="filter" [(ngModel)]="selectedStatus">
       <option value="all">Все</option>
       <option value="active">Активные</option>
-      <option value="completed">Завершённые</option>
+      <option value="completed">Выполненные</option>
       <option value="archived">Архив</option>
     </select>
   </div>
 
-  <div class="stats">
-    <p>Всего:{{totalCount}}</p>
-    <p>Активные:{{activeCount}}</p>
-    <p>Завершенные:{{CompletedCount}}</p>
-    <p>Архив:{{arhiveCount}}</p>
-  </div>
-
-  <button (click)="clearCompleted()">Очистить выполненые</button>
+  <!-- Список задач -->
   <ul>
-  <li *ngFor="let todo of todos " [ngClass]="{
-    'completed': todo.status === 'completed',
-    'archived':todo.status === 'archived'
-  }">
-    
-    <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
+    <li *ngFor="let todo of todos" [ngClass]="{
+      'completed': todo.status === 'completed',
+      'archived': todo.status === 'archived'
+    }">
+      <div class="task-header">
+        <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
+        <button class="delete" (click)="deleteTodo(todo.id)">
+          <span class="material-icons">delete</span>
+        </button>
+      </div>
 
-    <select [(ngModel)]="todo.status" (change)="updateStatus(todo.id, todo.status)">
-      <option value="active">Активна</option>
-      <option value="completed">Выполнена</option>
-      <option value="archived">Архив</option>
-    </select>
+      <div class="task-meta">
+        <label>Статус:</label>
+        <select [(ngModel)]="todo.status" (change)="updateStatus(todo.id, todo.status)">
+          <option value="active">Активна</option>
+          <option value="completed">Выполнена</option>
+          <option value="archived">Архив</option>
+        </select>
+      </div>
 
-    <!-- Поле редактирования дедлайна -->
-    <input
-      type="date"
-      [(ngModel)]="todo.dueDate"
-      (change)="updateDueDate(todo.id, todo.dueDate || '')"
-      (blur)="editTitle(todo.id, todo.title)"
-    />
+      <div class="task-meta">
+        <label>Дедлайн:</label>
+        <input
+          type="date"
+          [(ngModel)]="todo.dueDate"
+          (change)="updateDueDate(todo.id, todo.dueDate || '')"
+        />
+      </div>
 
-    <div class="meta">
-      <span>Создана: {{ todo.createdAt || '—' }}</span>
-      <span>Дедлайн: {{ todo.dueDate || '—' }}</span>
-    </div>
-
-    <button (click)="deleteTodo(todo.id)">Удалить</button>
-  </li>
-</ul>
+      <div class="meta">
+        <span>🕒 Создана: {{ todo.createdAt || '—' }}</span>
+        <span>📅 Дедлайн: {{ todo.dueDate || '—' }}</span>
+      </div>
+    </li>
+  </ul>
 </div>
