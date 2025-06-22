@@ -19,11 +19,13 @@ export class TodoService {
    * Добавляет новую задачу в список.
    * @param {string} title Название задачи
    */
-  addTodo(title: string): void {
+  addTodo(title: string , dueDate?:string): void {
     const newTodo: TodoItem = {
       id: this.generateId(),
       title,
       status: 'active',
+      createdAt: new Date().toISOString(),
+      dueDate: dueDate || undefined
       
     };
     this.todos.push(newTodo);

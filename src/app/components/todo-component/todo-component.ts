@@ -21,6 +21,8 @@ export class TodoComponent {
   /** Введённый заголовок новой задачи */
   newTitle: string = '';
 
+  newDueDate: string = '';
+
   /**
    * @param todoService Сервис для работы с задачами
    */
@@ -41,7 +43,10 @@ export class TodoComponent {
 
     this.todoService.addTodo(this.newTitle.trim());
     this.newTitle = '';
+    this.newDueDate = '';
     this.todos = this.todoService.getTodos();
+  
+
   }
 
   /**
