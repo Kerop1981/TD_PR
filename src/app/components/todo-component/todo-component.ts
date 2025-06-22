@@ -56,4 +56,20 @@ export class TodoComponent implements OnInit {
     this.todoService.updateDueDate(id, newDueDate);
     this.todos = this.todoService.getTodos();
   }
+
+  get totalCount(): number {
+    return this.todos.length;
+  }
+
+  get activeCount():number {
+    return this.todos.filter(todo => todo.status === 'active').length
+  }
+
+  get CompletedCount(): number {
+    return this.todos.filter(todo => todo.status === 'completed').length
+  }
+
+  get arhiveCount(): number {
+    return this.todos.filter(todo => todo.status === 'archived').length
+  }
 }
