@@ -76,4 +76,9 @@ export class TodoService {
       this.saveToLocalStorage();
     }
   }
+
+  clearCompleted():void {
+    this.todos = this.todos.filter(todo => todo.status !== 'completed');
+    this.saveToLocalStorage()
+  }
 }

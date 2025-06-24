@@ -3,11 +3,12 @@ import { TodoService } from '../../todo-serve';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { StatusFilterPipe } from '../../pipes/status-filter-pipe';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,StatusFilterPipe],
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css'
 })
@@ -17,16 +18,13 @@ export class TodoComponent implements OnInit {
   newDueDate?: string;
   selectedStatus: string = 'all';
 
+
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
     this.todos = this.todoService.getTodos(); 
   }
 
-  get filteredTodos(): TodoItem[] {
-    if (this.selectedStatus === 'all') return this.todos;
-    return this.todos.filter(todo => todo.status === this.selectedStatus);
-  }
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
@@ -55,5 +53,26 @@ export class TodoComponent implements OnInit {
   updateDueDate(id: string, newDueDate: string): void {
     this.todoService.updateDueDate(id, newDueDate);
     this.todos = this.todoService.getTodos();
+  }
+
+  get totalCount(): number {
+    return this.todos.length;
+  }
+
+  get activeCount():number {
+    return this.todos.filter(todo => todo.status === 'active').length
+  }
+
+  get CompletedCount(): number {
+    return this.todos.filter(todo => todo.status === 'completed').length
+  }
+
+  get arhiveCount(): number {
+    return this.todos.filter(todo => todo.status === 'archived').length
+  }
+
+  clearCompleted(): void {
+    this.todoService.clearCompleted();
+    this.todos = this.todoService.getTodos()
   }
 }
