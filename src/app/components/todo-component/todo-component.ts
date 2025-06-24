@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { TodoService } from '../../todo-serve';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
@@ -8,29 +8,27 @@ import { StatusFilterPipe } from '../../pipes/status-filter-pipe';
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [CommonModule, FormsModule,StatusFilterPipe],
+  imports: [CommonModule, FormsModule, StatusFilterPipe],
   templateUrl: './todo-component.html',
-  styleUrl: './todo-component.css'
+  styleUrl: './todo-component.css',
 })
 export class TodoComponent implements OnInit {
+  private todoService = inject(TodoService);
+
   todos: TodoItem[] = [];
-  newTitle: string = '';
+  newTitle = '';
   newDueDate?: string;
-  selectedStatus: string = 'all';
-
-
-  constructor(private todoService: TodoService) {}
+  selectedStatus = 'all';
 
   ngOnInit(): void {
-    this.todos = this.todoService.getTodos(); 
+    this.todos = this.todoService.getTodos();
   }
-
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
 
     this.todoService.addTodo(this.newTitle.trim(), this.newDueDate);
-    this.todos = this.todoService.getTodos(); 
+    this.todos = this.todoService.getTodos();
     this.newTitle = '';
     this.newDueDate = '';
   }
@@ -59,20 +57,20 @@ export class TodoComponent implements OnInit {
     return this.todos.length;
   }
 
-  get activeCount():number {
-    return this.todos.filter(todo => todo.status === 'active').length
+  get activeCount(): number {
+    return this.todos.filter((todo) => todo.status === 'active').length;
   }
 
   get CompletedCount(): number {
-    return this.todos.filter(todo => todo.status === 'completed').length
+    return this.todos.filter((todo) => todo.status === 'completed').length;
   }
 
   get arhiveCount(): number {
-    return this.todos.filter(todo => todo.status === 'archived').length
+    return this.todos.filter((todo) => todo.status === 'archived').length;
   }
 
   clearCompleted(): void {
     this.todoService.clearCompleted();
-    this.todos = this.todoService.getTodos()
+    this.todos = this.todoService.getTodos();
   }
 }
