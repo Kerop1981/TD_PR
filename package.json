@@ -45,10 +45,11 @@
     "typescript": "~5.8.2",
     "typescript-eslint": "8.34.1"
   },
-  "lint-staged": {
-    "src/**/*.{ts,html,css,scss}": [
-      "prettier --write",
-      "ng lint --fix"
-    ]
-  }
+"lint-staged": {
+  "src/**/*.{ts,html,css,scss}": [
+    "prettier --write",
+    "eslint --fix"
+  ]
+}
+
 }
