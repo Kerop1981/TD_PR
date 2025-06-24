@@ -19,11 +19,13 @@ export class TodoService {
    * Добавляет новую задачу в список.
    * @param {string} title Название задачи
    */
-  addTodo(title: string): void {
+  addTodo(title: string , dueDate?:string): void {
     const newTodo: TodoItem = {
       id: this.generateId(),
       title,
       status: 'active',
+      createdAt: new Date().toISOString().split('T')[0],
+      dueDate: dueDate || ''
       
     };
     this.todos.push(newTodo);
@@ -67,5 +69,12 @@ export class TodoService {
    */
   getTodos(): TodoItem[] {
     return this.todos;
+  }
+
+  updateDueDate(id: string, newdueDate:string):void{
+    const todo = this.todos.find(t => t.id === id);
+    if (todo){
+      todo.dueDate = newdueDate
+    }
   }
 }

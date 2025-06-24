@@ -2,6 +2,7 @@
   <h1>Список задач</h1>
 
   <input [(ngModel)]="newTitle" placeholder="Новая задача" />
+  <input type="date" [(ngModel)]="newDueDate">
   <button (click)="addTodo()">Добавить</button>
 
   <!-- Фильтр по статусу -->
@@ -16,21 +17,28 @@
   </div>
 
   <ul>
-    <li *ngFor="let todo of filteredTodos">
-      <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
+  <li *ngFor="let todo of filteredTodos">
+    <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
 
-      <select [(ngModel)]="todo.status" (change)="updateStatus(todo.id, todo.status)">
-        <option value="active">Активна</option>
-        <option value="completed">Выполнена</option>
-        <option value="archived">Архив</option>
-      </select>
+    <select [(ngModel)]="todo.status" (change)="updateStatus(todo.id, todo.status)">
+      <option value="active">Активна</option>
+      <option value="completed">Выполнена</option>
+      <option value="archived">Архив</option>
+    </select>
 
-      <div class="meta">
-        <span>Создана: {{ todo.createdAt || '—' }}</span>
-        <span>Дедлайн: {{ todo.dueDate || '—' }}</span>
-      </div>
+    <!-- Поле редактирования дедлайна -->
+    <input
+      type="date"
+      [(ngModel)]="todo.dueDate"
+      (change)="updateDueDate(todo.id, todo.dueDate || '')"
+    />
 
-      <button (click)="deleteTodo(todo.id)">Удалить</button>
-    </li>
-  </ul>
+    <div class="meta">
+      <span>Создана: {{ todo.createdAt || '—' }}</span>
+      <span>Дедлайн: {{ todo.dueDate || '—' }}</span>
+    </div>
+
+    <button (click)="deleteTodo(todo.id)">Удалить</button>
+  </li>
+</ul>
 </div>

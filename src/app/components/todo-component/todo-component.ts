@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TodoService } from '../../todo-serve'; 
 import { TodoItem } from '../../models/todo.model';
-import { Title } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-todo',
@@ -20,6 +20,8 @@ export class TodoComponent {
 
   /** Введённый заголовок новой задачи */
   newTitle: string = '';
+
+  newDueDate: string = '';
 
   /**
    * @param todoService Сервис для работы с задачами
@@ -41,7 +43,10 @@ export class TodoComponent {
 
     this.todoService.addTodo(this.newTitle.trim());
     this.newTitle = '';
+    this.newDueDate = '';
     this.todos = this.todoService.getTodos();
+  
+
   }
 
   /**
@@ -64,5 +69,10 @@ export class TodoComponent {
   get filteredTodos(): TodoItem[]{
     if (this.selectedStatus === 'all') return this.todos;
     return this.todos.filter(todos => todos.status === this.selectedStatus);
+  }
+
+  updateDueDate(id: string, dueDate: string):void{
+    this.todoService.updateDueDate(id,dueDate)
+    this.todos = this.todoService.getTodos();
   }
 }
