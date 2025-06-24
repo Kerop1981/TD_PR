@@ -45,8 +45,6 @@ export class TodoComponent {
     this.newTitle = '';
     this.newDueDate = '';
     this.todos = this.todoService.getTodos();
-  
-
   }
 
   /**
