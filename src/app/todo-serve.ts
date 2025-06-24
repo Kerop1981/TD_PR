@@ -7,7 +7,7 @@ import { TodoItem } from './models/todo.model';
 export class TodoService {
   private todos: TodoItem[] = [];
 
-  constructor() {
+  ngOnlnit() {
     this.loadFromLocalStorage();
   }
 
