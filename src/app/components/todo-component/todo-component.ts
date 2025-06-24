@@ -3,11 +3,12 @@ import { TodoService } from '../../todo-serve';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { StatusFilterPipe } from '../../pipes/status-filter-pipe';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,StatusFilterPipe],
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css'
 })
@@ -17,16 +18,13 @@ export class TodoComponent implements OnInit {
   newDueDate?: string;
   selectedStatus: string = 'all';
 
+
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
     this.todos = this.todoService.getTodos(); 
   }
 
-  get filteredTodos(): TodoItem[] {
-    if (this.selectedStatus === 'all') return this.todos;
-    return this.todos.filter(todo => todo.status === this.selectedStatus);
-  }
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
