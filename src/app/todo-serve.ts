@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TodoItem } from './models/todo.model'; 
+import { TodoItem } from './models/todo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,74 +7,73 @@ import { TodoItem } from './models/todo.model';
 export class TodoService {
   private todos: TodoItem[] = [];
 
+  constructor() {
+    this.loadFromLocalStorage();
+  }
+
   /**
-   * Генерирует уникальный идентификатор задачи на основе текущего времени.
-   * @returns {string} Уникальный ID
+   * Загружает задачи из localStorage при инициализации
    */
+  private loadFromLocalStorage(): void {
+    const data = localStorage.getItem('todos');
+    if (data) {
+      this.todos = JSON.parse(data);
+    }
+  }
+
+  /**
+   * Сохраняет текущие задачи в localStorage
+   */
+  private saveToLocalStorage(): void {
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+  }
+
   private generateId(): string {
     return Date.now().toString();
   }
 
-  /**
-   * Добавляет новую задачу в список.
-   * @param {string} title Название задачи
-   */
-  addTodo(title: string , dueDate?:string): void {
+  addTodo(title: string, dueDate?: string): void {
     const newTodo: TodoItem = {
       id: this.generateId(),
       title,
       status: 'active',
       createdAt: new Date().toISOString().split('T')[0],
       dueDate: dueDate || ''
-      
     };
     this.todos.push(newTodo);
+    this.saveToLocalStorage(); 
   }
 
-  /**
-   * Обновляет статус существующей задачи.
-   * @param {string} id ID задачи
-   * @param {'active' | 'completed' | 'archived'} newStatus Новый статус задачи
-   */
   updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
     const todo = this.todos.find(t => t.id === id);
     if (todo) {
       todo.status = newStatus;
+      this.saveToLocalStorage(); 
     }
   }
 
-  /**
-   * Изменяет заголовок задачи.
-   * @param {string} id ID задачи
-   * @param {string} newTitle Новый заголовок
-   */
   editTitle(id: string, newTitle: string): void {
     const todo = this.todos.find(t => t.id === id);
     if (todo) {
       todo.title = newTitle;
+      this.saveToLocalStorage();
     }
   }
 
-  /**
-   * Удаляет задачу из списка по ID.
-   * @param {string} id ID задачи
-   */
   deleteTodo(id: string): void {
     this.todos = this.todos.filter(t => t.id !== id);
+    this.saveToLocalStorage(); 
   }
 
-  /**
-   * Возвращает текущий список всех задач.
-   * @returns {TodoItem[]} Массив всех задач
-   */
   getTodos(): TodoItem[] {
     return this.todos;
   }
 
-  updateDueDate(id: string, newdueDate:string):void{
+  updateDueDate(id: string, newDueDate: string): void {
     const todo = this.todos.find(t => t.id === id);
-    if (todo){
-      todo.dueDate = newdueDate
+    if (todo) {
+      todo.dueDate = newDueDate;
+      this.saveToLocalStorage();
     }
   }
 }
