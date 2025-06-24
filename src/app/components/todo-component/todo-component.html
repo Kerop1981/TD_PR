@@ -17,7 +17,11 @@
   </div>
 
   <ul>
-  <li *ngFor="let todo of filteredTodos">
+  <li *ngFor="let todo of filteredTodos" [ngClass]="{
+    'completed': todo.status === 'completed',
+    'archived':todo.status === 'archived'
+  }">
+    
     <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
 
     <select [(ngModel)]="todo.status" (change)="updateStatus(todo.id, todo.status)">
@@ -31,6 +35,7 @@
       type="date"
       [(ngModel)]="todo.dueDate"
       (change)="updateDueDate(todo.id, todo.dueDate || '')"
+      (blur)="editTitle(todo.id, todo.title)"
     />
 
     <div class="meta">
