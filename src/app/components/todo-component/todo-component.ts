@@ -72,4 +72,9 @@ export class TodoComponent implements OnInit {
   get arhiveCount(): number {
     return this.todos.filter(todo => todo.status === 'archived').length
   }
+
+  clearCompleted(): void {
+    this.todoService.clearCompleted();
+    this.todos = this.todoService.getTodos()
+  }
 }

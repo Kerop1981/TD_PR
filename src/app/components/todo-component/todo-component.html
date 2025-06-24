@@ -22,7 +22,8 @@
     <p>Завершенные:{{CompletedCount}}</p>
     <p>Архив:{{arhiveCount}}</p>
   </div>
-  
+
+  <button (click)="clearCompleted()">Очистить выполненые</button>
   <ul>
   <li *ngFor="let todo of filteredTodos" [ngClass]="{
     'completed': todo.status === 'completed',
