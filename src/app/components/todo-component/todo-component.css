@@ -36,3 +36,11 @@ input, select {
   opacity: 0.5;
   pointer-events: none;
 }
+
+.stats{
+  display: flex;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
