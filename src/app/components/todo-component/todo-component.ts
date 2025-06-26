@@ -1,14 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { TodoService } from '../../todo-serve';
+import { TodoService } from './todo-service';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StatusFilterPipe } from '../../pipes/status-filter-pipe';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [CommonModule, FormsModule, StatusFilterPipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css',
 })

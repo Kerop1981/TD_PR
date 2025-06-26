@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TodoItem } from './models/todo.model';
+import { TodoItem } from '../../models/todo.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TodoService {
   private todos: TodoItem[] = [];
@@ -38,22 +38,22 @@ export class TodoService {
       title,
       status: 'active',
       createdAt: new Date().toISOString().split('T')[0],
-      dueDate: dueDate || ''
+      dueDate: dueDate || '',
     };
     this.todos.push(newTodo);
-    this.saveToLocalStorage(); 
+    this.saveToLocalStorage();
   }
 
   updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
-    const todo = this.todos.find(t => t.id === id);
+    const todo = this.todos.find((t) => t.id === id);
     if (todo) {
       todo.status = newStatus;
-      this.saveToLocalStorage(); 
+      this.saveToLocalStorage();
     }
   }
 
   editTitle(id: string, newTitle: string): void {
-    const todo = this.todos.find(t => t.id === id);
+    const todo = this.todos.find((t) => t.id === id);
     if (todo) {
       todo.title = newTitle;
       this.saveToLocalStorage();
@@ -61,8 +61,8 @@ export class TodoService {
   }
 
   deleteTodo(id: string): void {
-    this.todos = this.todos.filter(t => t.id !== id);
-    this.saveToLocalStorage(); 
+    this.todos = this.todos.filter((t) => t.id !== id);
+    this.saveToLocalStorage();
   }
 
   getTodos(): TodoItem[] {
@@ -70,15 +70,15 @@ export class TodoService {
   }
 
   updateDueDate(id: string, newDueDate: string): void {
-    const todo = this.todos.find(t => t.id === id);
+    const todo = this.todos.find((t) => t.id === id);
     if (todo) {
       todo.dueDate = newDueDate;
       this.saveToLocalStorage();
     }
   }
 
-  clearCompleted():void {
-    this.todos = this.todos.filter(todo => todo.status !== 'completed');
-    this.saveToLocalStorage()
+  clearCompleted(): void {
+    this.todos = this.todos.filter((todo) => todo.status !== 'completed');
+    this.saveToLocalStorage();
   }
 }
