@@ -11,9 +11,6 @@ export class TodoService {
     this.loadFromLocalStorage();
   }
 
-  /**
-   * Загружает задачи из localStorage при инициализации
-   */
   private loadFromLocalStorage(): void {
     const data = localStorage.getItem('todos');
     if (data) {
@@ -21,9 +18,6 @@ export class TodoService {
     }
   }
 
-  /**
-   * Сохраняет текущие задачи в localStorage
-   */
   private saveToLocalStorage(): void {
     localStorage.setItem('todos', JSON.stringify(this.todos));
   }
