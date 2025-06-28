@@ -1,9 +1,5 @@
-
 type TodoStatus = 'active' | 'completed' | 'archived';
 
-/**
- * Интерфейс задачи
- */
 export interface TodoItem {
   id: string;
   title: string;
@@ -11,4 +7,3 @@ export interface TodoItem {
   createdAt?: string;
   dueDate?: string;
 }
-
