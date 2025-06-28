@@ -19,7 +19,7 @@
 
   <ul>
     <li
-      *ngFor="let todo of todos"
+      *ngFor="let todo of todos$ | async"
       [ngClass]="{
       'completed': todo.status === 'completed',
       'archived': todo.status === 'archived'

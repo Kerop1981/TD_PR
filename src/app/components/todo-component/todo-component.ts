@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoService } from './todo-service';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -11,44 +12,36 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css',
 })
-export class TodoComponent implements OnInit {
+export class TodoComponent {
   private todoService = inject(TodoService);
 
-  todos: TodoItem[] = [];
+  todos$: Observable<TodoItem[]> = this.todoService.todos$;
+
   newTitle = '';
   newDueDate?: string;
   selectedStatus = 'all';
-
-  ngOnInit(): void {
-    this.todos = this.todoService.getTodos();
-  }
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
 
     this.todoService.addTodo(this.newTitle.trim(), this.newDueDate);
-    this.todos = this.todoService.getTodos();
     this.newTitle = '';
     this.newDueDate = '';
   }
 
   editTitle(id: string, newTitle: string): void {
     this.todoService.editTitle(id, newTitle);
-    this.todos = this.todoService.getTodos();
   }
 
   deleteTodo(id: string): void {
     this.todoService.deleteTodo(id);
-    this.todos = this.todoService.getTodos();
   }
 
   updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
     this.todoService.updateStatus(id, newStatus);
-    this.todos = this.todoService.getTodos();
   }
 
   updateDueDate(id: string, newDueDate: string): void {
     this.todoService.updateDueDate(id, newDueDate);
-    this.todos = this.todoService.getTodos();
   }
 }
