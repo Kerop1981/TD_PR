@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TodoService } from '../../todo-serve';
+import { TodoService } from '../../todo-service';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
