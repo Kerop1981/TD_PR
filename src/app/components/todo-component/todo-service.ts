@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, delay, Observable, of } from 'rxjs';
 import { TodoItem } from '../../models/todo.model';
 import { Injectable } from '@angular/core';
 
@@ -9,8 +9,39 @@ export class TodoService {
   private todosSubject = new BehaviorSubject<TodoItem[]>([]);
   public todos$: Observable<TodoItem[]> = this.todosSubject.asObservable();
 
+  private FakeUserTodo: TodoItem[] = [
+    {
+      id: '1',
+      title: 'устроиться на работу',
+      status: 'active',
+      createdAt: '25.05.2025',
+    },
+
+    {
+      id: '2',
+      title: 'зарабатываать 350к',
+      status: 'active',
+      createdAt: '25.05.2025',
+    },
+
+    {
+      id: '3',
+      title: 'купить машину',
+      status: 'active',
+      createdAt: '25.05.2025',
+    },
+  ];
+
   constructor() {
     this.loadFromLocalStorage();
+  }
+
+  private loadOFtodos(): void {
+    of(this.FakeUserTodo)
+      .pipe(delay(1000))
+      .subscribe((todos) => {
+        this.todosSubject.next(todos);
+      });
   }
 
   private loadFromLocalStorage(): void {
