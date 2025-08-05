@@ -9,7 +9,7 @@ export class TodoService {
   private todosSubject = new BehaviorSubject<TodoItem[]>([]);
   public todos$: Observable<TodoItem[]> = this.todosSubject.asObservable();
 
-  private FakeUserTodo: TodoItem[] = [
+  private FAKE_USER_TODOS: TodoItem[] = [
     {
       id: '1',
       title: 'устроиться на работу',
@@ -36,8 +36,8 @@ export class TodoService {
     this.loadFromLocalStorage();
   }
 
-  private loadOFtodos(): void {
-    of(this.FakeUserTodo)
+  private loadTodos(): void {
+    of(this.FAKE_USER_TODOS)
       .pipe(delay(1000))
       .subscribe((todos) => {
         this.todosSubject.next(todos);
@@ -103,7 +103,7 @@ export class TodoService {
     this.saveToLocalStorage();
   }
 
-  clearCompleted(): void {
+  saveTodosToLocalStorage(): void {
     const todos = this.todosSubject.getValue().filter((todo) => todo.status !== 'completed');
     this.todosSubject.next(todos);
     this.saveToLocalStorage();

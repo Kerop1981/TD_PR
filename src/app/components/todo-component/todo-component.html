@@ -17,9 +17,10 @@
     </select>
   </div>
 
+  <ng-template #loading> загрузкa... </ng-template>
   <ul>
     <li
-      *ngFor="let todo of todos$ | async"
+      *ngFor="let todo of todos$ | async , else loading"
       [ngClass]="{
       'completed': todo.status === 'completed',
       'archived': todo.status === 'archived'
