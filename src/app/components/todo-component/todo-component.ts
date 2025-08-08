@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { TodoService } from './todo-service';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -12,14 +12,16 @@ import { Observable } from 'rxjs';
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css',
 })
-export class TodoComponent {
+export class TodoComponent implements OnInit, OnDestroy {
   private todoService = inject(TodoService);
+  takedestroy$ = new Subject<void>();
 
   todos$: Observable<TodoItem[]> = this.todoService.todos$;
-
   newTitle = '';
   newDueDate?: string;
   selectedStatus = 'all';
+
+  constructor(private todoservice: TodoService) {}
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
@@ -29,6 +31,16 @@ export class TodoComponent {
     this.newDueDate = '';
   }
 
+  ngOnInit(): void {
+    this.todoService.todos$.pipe(takeUntil(this.takedestroy$)).subscribe((todos) => {
+      console.log(todos);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.takedestroy$.next();
+    this.takedestroy$.complete();
+  }
   editTitle(id: string, newTitle: string): void {
     this.todoService.editTitle(id, newTitle);
   }
