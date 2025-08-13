@@ -1,4 +1,4 @@
-import { BehaviorSubject, delay, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TodoItem } from '../../models/todo.model';
 import { Injectable } from '@angular/core';
 
@@ -34,14 +34,6 @@ export class TodoService {
 
   constructor() {
     this.loadFromLocalStorage();
-  }
-
-  private loadTodos(): void {
-    of(this.FAKE_USER_TODOS)
-      .pipe(delay(1000))
-      .subscribe((todos) => {
-        this.todosSubject.next(todos);
-      });
   }
 
   private loadFromLocalStorage(): void {
