@@ -1,9 +1,9 @@
-import { Component, inject, Input, OnChanges } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoService } from './todo-service';
 import { TodoItem } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -12,14 +12,14 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css',
 })
-export class TodoComponent implements OnChanges {
+export class TodoComponent {
   private todoService = inject(TodoService);
-  takedestroy$ = new Subject<void>();
+  destroy$ = new Subject<void>();
 
-  @Input({ required: true }) todos$: Observable<TodoItem[]> = this.todoService.todos$;
+  todos$: Observable<TodoItem[]> = this.todoService.todos$;
 
   newTitle = '';
-  newDueDate?: string;
+  newDueDate = '';
   selectedStatus = 'all';
 
   addTodo(): void {
@@ -29,17 +29,6 @@ export class TodoComponent implements OnChanges {
     this.newTitle = '';
     this.newDueDate = '';
   }
-
-  ngOnChanges(): void {
-    this.todoService.todos$.pipe(takeUntil(this.takedestroy$)).subscribe((todos) => {
-      console.log(todos);
-    });
-  }
-
-  // ngOnDestroy(): void {
-  //   this.takedestroy$.next();
-  //   this.takedestroy$.complete();
-  // }
 
   editTitle(id: string, newTitle: string): void {
     this.todoService.editTitle(id, newTitle);
