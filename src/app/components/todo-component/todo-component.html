@@ -17,19 +17,15 @@
     </select>
   </div>
 
-  <ng-template #loading> загрузкa... </ng-template>
+  @defer {
   <ul>
-    <li *ngFor="let todo of (todos$ | async) || []" {{todo.title}}>
-      <!-- @defer (when todos$ | async; let todos) {
-  <ul>
-    <li *ngFor="let todo of todos">
-      {{ todo.title }}
-    </li>
-  </ul>
-} @loading {
-  <p>загрузка...</p>
-} -->
-
+    <li
+      *ngFor="let todo of (todos$ | async)"
+      [ngClass]="{
+            'completed': todo.status === 'completed',
+            'archived': todo.status === 'archived'
+          }"
+    >
       <div class="task-header">
         <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
         <button class="delete" (click)="deleteTodo(todo.id)">
@@ -66,4 +62,7 @@
       </div>
     </li>
   </ul>
+  } @loading {
+  <p>Загрузка...</p>
+  }
 </div>

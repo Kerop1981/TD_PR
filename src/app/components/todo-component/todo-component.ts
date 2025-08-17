@@ -18,6 +18,10 @@ export class TodoComponent {
 
   todos$: Observable<TodoItem[]> = this.todoService.todos$;
 
+  // todo$: Observable<TodoItem> = this.todoService.todos$.pipe(
+  // map(todos => todos[0] ?? null)
+  // );
+
   newTitle = '';
   newDueDate = '';
   selectedStatus = 'all';
