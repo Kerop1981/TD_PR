@@ -1,6 +1,7 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { TodoItem } from '../../models/todo.model';
+import { TodoItem, TodoStatus } from '../../models/todo.model';
 import { Injectable } from '@angular/core';
+import { LocalStorageService } from '../../local-storage';
 
 @Injectable({
   providedIn: 'root',
@@ -9,43 +10,19 @@ export class TodoService {
   private todosSubject = new BehaviorSubject<TodoItem[]>([]);
   public todos$: Observable<TodoItem[]> = this.todosSubject.asObservable();
 
-  private FAKE_USER_TODOS: TodoItem[] = [
-    {
-      id: '1',
-      title: 'устроиться на работу',
-      status: 'active',
-      createdAt: '25.05.2025',
-    },
-
-    {
-      id: '2',
-      title: 'зарабатываать 350к',
-      status: 'active',
-      createdAt: '25.05.2025',
-    },
-
-    {
-      id: '3',
-      title: 'купить машину',
-      status: 'active',
-      createdAt: '25.05.2025',
-    },
-  ];
-
-  constructor() {
+  constructor(private storage: LocalStorageService) {
     this.loadFromLocalStorage();
   }
 
   private loadFromLocalStorage(): void {
-    const data = localStorage.getItem('todos');
-    if (data) {
-      const todos = JSON.parse(data) as TodoItem[];
+    const todos = this.storage.get<TodoItem[]>('todos');
+    if (todos) {
       this.todosSubject.next(todos);
     }
   }
 
   private saveToLocalStorage(): void {
-    localStorage.setItem('todos', JSON.stringify(this.todosSubject.getValue()));
+    this.storage.set('todos', this.todosSubject.getValue());
   }
 
   private generateId(): string {
@@ -57,7 +34,7 @@ export class TodoService {
     const newTodo: TodoItem = {
       id: this.generateId(),
       title,
-      status: 'active',
+      status: TodoStatus.Active,
       createdAt: new Date().toISOString().split('T')[0],
       dueDate: dueDate || '',
     };
@@ -65,7 +42,7 @@ export class TodoService {
     this.saveToLocalStorage();
   }
 
-  updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
+  updateStatus(id: string, newStatus: TodoStatus): void {
     const todos = this.todosSubject
       .getValue()
       .map((todo) => (todo.id === id ? { ...todo, status: newStatus } : todo));

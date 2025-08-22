@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { TodoService } from './todo-service';
-import { TodoItem } from '../../models/todo.model';
+import { TodoItem, TodoStatus } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -13,18 +13,25 @@ import { Observable, Subject } from 'rxjs';
   styleUrl: './todo-component.css',
 })
 export class TodoComponent {
-  private todoService = inject(TodoService);
-  destroy$ = new Subject<void>();
-
-  todos$: Observable<TodoItem[]> = this.todoService.todos$;
-
-  // todo$: Observable<TodoItem> = this.todoService.todos$.pipe(
-  // map(todos => todos[0] ?? null)
-  // );
-
+  private filter$ = new BehaviorSubject<'all' | TodoStatus>('all');
+  todos$!: Observable<TodoItem[]>;
   newTitle = '';
   newDueDate = '';
-  selectedStatus = 'all';
+  selectedStatus: 'all' | TodoStatus = 'all';
+  protected readonly TodoStatus = TodoStatus;
+
+  constructor(private todoService: TodoService) {
+    this.todos$ = combineLatest([this.todoService.todos$, this.filter$]).pipe(
+      map(([todos, filter]) =>
+        filter === 'all' ? todos : todos.filter((t) => t.status === filter)
+      )
+    );
+  }
+
+  setFilter(value: 'all' | TodoStatus) {
+    this.selectedStatus = value;
+    this.filter$.next(value);
+  }
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
@@ -42,7 +49,7 @@ export class TodoComponent {
     this.todoService.deleteTodo(id);
   }
 
-  updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
+  updateStatus(id: string, newStatus: TodoStatus): void {
     this.todoService.updateStatus(id, newStatus);
   }
 
