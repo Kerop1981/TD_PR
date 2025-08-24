@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TodoService } from './todo-service';
 import { TodoItem, TodoStatus } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -12,18 +12,22 @@ import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css',
 })
-export class TodoComponent {
+export class TodoComponent implements OnInit {
   private filter$ = new BehaviorSubject<'all' | TodoStatus>('all');
   todos$!: Observable<TodoItem[]>;
   newTitle = '';
   newDueDate = '';
   selectedStatus: 'all' | TodoStatus = 'all';
   protected readonly TodoStatus = TodoStatus;
+  private Storage = inject(TodoService);
+  constructor(private todoService: TodoService) {}
 
-  constructor(private todoService: TodoService) {
-    this.todos$ = combineLatest([this.todoService.todos$, this.filter$]).pipe(
-      map(([todos, filter]) =>
-        filter === 'all' ? todos : todos.filter((t) => t.status === filter)
+  ngOnInit() {
+    this.todos$ = this.Storage.todos$.pipe(
+      map((todos) =>
+        this.selectedStatus === 'all'
+          ? todos
+          : todos.filter((t) => t.status === this.selectedStatus)
       )
     );
   }

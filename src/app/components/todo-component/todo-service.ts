@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TodoItem, TodoStatus } from '../../models/todo.model';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LocalStorageService } from '../../local-storage';
 
 @Injectable({
@@ -9,8 +9,9 @@ import { LocalStorageService } from '../../local-storage';
 export class TodoService {
   private todosSubject = new BehaviorSubject<TodoItem[]>([]);
   public todos$: Observable<TodoItem[]> = this.todosSubject.asObservable();
+  private storage = inject(LocalStorageService);
 
-  constructor(private storage: LocalStorageService) {
+  constructor() {
     this.loadFromLocalStorage();
   }
 
