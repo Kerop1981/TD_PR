@@ -22,7 +22,7 @@ export class TodoService {
     }
   }
 
-  private saveToLocalStorage(): void {
+  private saveTodosLocalStorage(): void {
     this.storage.set('todos', this.todosSubject.getValue());
   }
 
@@ -40,7 +40,7 @@ export class TodoService {
       dueDate: dueDate || '',
     };
     this.todosSubject.next([...todos, newTodo]);
-    this.saveToLocalStorage();
+    this.saveTodosLocalStorage();
   }
 
   updateStatus(id: string, newStatus: TodoStatus): void {
@@ -48,7 +48,7 @@ export class TodoService {
       .getValue()
       .map((todo) => (todo.id === id ? { ...todo, status: newStatus } : todo));
     this.todosSubject.next(todos);
-    this.saveToLocalStorage();
+    this.saveTodosLocalStorage();
   }
 
   editTitle(id: string, newTitle: string): void {
@@ -56,13 +56,13 @@ export class TodoService {
       .getValue()
       .map((todo) => (todo.id === id ? { ...todo, title: newTitle } : todo));
     this.todosSubject.next(todos);
-    this.saveToLocalStorage();
+    this.saveTodosLocalStorage();
   }
 
   deleteTodo(id: string): void {
     const todos = this.todosSubject.getValue().filter((todo) => todo.id !== id);
     this.todosSubject.next(todos);
-    this.saveToLocalStorage();
+    this.saveTodosLocalStorage();
   }
 
   updateDueDate(id: string, newDueDate: string): void {
@@ -70,12 +70,12 @@ export class TodoService {
       .getValue()
       .map((todo) => (todo.id === id ? { ...todo, dueDate: newDueDate } : todo));
     this.todosSubject.next(todos);
-    this.saveToLocalStorage();
+    this.saveTodosLocalStorage();
   }
 
   saveTodosToLocalStorage(): void {
     const todos = this.todosSubject.getValue().filter((todo) => todo.status !== 'completed');
     this.todosSubject.next(todos);
-    this.saveToLocalStorage();
+    this.saveTodosLocalStorage();
   }
 }
