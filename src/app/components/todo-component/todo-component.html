@@ -19,7 +19,7 @@
 
   @defer {
   <ul>
-    @for (todo of (todos$ | async); track todo.id) {
+    @for (todo of (todos$ | async); track todo.id) { @if(todo.status === selectedStatus) {
     <li
       [ngClass]="{
             'completed': todo.status === TodoStatus.Completed,
@@ -61,7 +61,7 @@
         <span>📅 Дедлайн: {{ todo.dueDate || '—' }}</span>
       </div>
     </li>
-    }
+    } }
   </ul>
   } @loading {
   <p>Загрузка...</p>

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoService } from './todo-service';
 import { TodoItem, TodoStatus } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
@@ -12,25 +12,20 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css',
 })
-export class TodoComponent implements OnInit {
+export class TodoComponent {
   private filter$ = new BehaviorSubject<'all' | TodoStatus>('all');
-  todos$!: Observable<TodoItem[]>;
+  private Storage = inject(TodoService);
+
+  todos$: Observable<TodoItem[]> = this.Storage.todos$.pipe(
+    map((todos) =>
+      this.selectedStatus === 'all' ? todos : todos.filter((t) => t.status === this.selectedStatus)
+    )
+  );
+
   newTitle = '';
   newDueDate = '';
   selectedStatus: 'all' | TodoStatus = 'all';
   protected readonly TodoStatus = TodoStatus;
-  private Storage = inject(TodoService);
-  constructor(private todoService: TodoService) {}
-
-  ngOnInit() {
-    this.todos$ = this.Storage.todos$.pipe(
-      map((todos) =>
-        this.selectedStatus === 'all'
-          ? todos
-          : todos.filter((t) => t.status === this.selectedStatus)
-      )
-    );
-  }
 
   setFilter(value: 'all' | TodoStatus) {
     this.selectedStatus = value;
@@ -40,24 +35,24 @@ export class TodoComponent implements OnInit {
   addTodo(): void {
     if (!this.newTitle.trim()) return;
 
-    this.todoService.addTodo(this.newTitle.trim(), this.newDueDate);
+    this.Storage.addTodo(this.newTitle.trim(), this.newDueDate);
     this.newTitle = '';
     this.newDueDate = '';
   }
 
   editTitle(id: string, newTitle: string): void {
-    this.todoService.editTitle(id, newTitle);
+    this.Storage.editTitle(id, newTitle);
   }
 
   deleteTodo(id: string): void {
-    this.todoService.deleteTodo(id);
+    this.Storage.deleteTodo(id);
   }
 
   updateStatus(id: string, newStatus: TodoStatus): void {
-    this.todoService.updateStatus(id, newStatus);
+    this.Storage.updateStatus(id, newStatus);
   }
 
   updateDueDate(id: string, newDueDate: string): void {
-    this.todoService.updateDueDate(id, newDueDate);
+    this.Storage.updateDueDate(id, newDueDate);
   }
 }
