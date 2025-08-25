@@ -3,7 +3,7 @@ import { TodoService } from './todo-service';
 import { TodoItem, TodoStatus } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -14,13 +14,9 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 })
 export class TodoComponent {
   private filter$ = new BehaviorSubject<'all' | TodoStatus>('all');
-  private Storage = inject(TodoService);
+  private todoService = inject(TodoService);
 
-  todos$: Observable<TodoItem[]> = this.Storage.todos$.pipe(
-    map((todos) =>
-      this.selectedStatus === 'all' ? todos : todos.filter((t) => t.status === this.selectedStatus)
-    )
-  );
+  todos$: Observable<TodoItem[]> = this.todoService.todos$;
 
   newTitle = '';
   newDueDate = '';
@@ -35,24 +31,24 @@ export class TodoComponent {
   addTodo(): void {
     if (!this.newTitle.trim()) return;
 
-    this.Storage.addTodo(this.newTitle.trim(), this.newDueDate);
+    this.todoService.addTodo(this.newTitle.trim(), this.newDueDate);
     this.newTitle = '';
     this.newDueDate = '';
   }
 
   editTitle(id: string, newTitle: string): void {
-    this.Storage.editTitle(id, newTitle);
+    this.todoService.editTitle(id, newTitle);
   }
 
   deleteTodo(id: string): void {
-    this.Storage.deleteTodo(id);
+    this.todoService.deleteTodo(id);
   }
 
   updateStatus(id: string, newStatus: TodoStatus): void {
-    this.Storage.updateStatus(id, newStatus);
+    this.todoService.updateStatus(id, newStatus);
   }
 
   updateDueDate(id: string, newDueDate: string): void {
-    this.Storage.updateDueDate(id, newDueDate);
+    this.todoService.updateDueDate(id, newDueDate);
   }
 }
