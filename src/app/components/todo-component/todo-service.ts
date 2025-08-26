@@ -73,9 +73,13 @@ export class TodoService {
     this.saveTodosLocalStorage();
   }
 
+  private TodosLocalStrorage(): void {
+    localStorage.setItem('todos', JSON.stringify(this.todosSubject.getValue()));
+  }
+
   saveTodosToLocalStorage(): void {
     const todos = this.todosSubject.getValue().filter((todo) => todo.status !== 'completed');
     this.todosSubject.next(todos);
-    this.saveTodosLocalStorage();
+    this.TodosLocalStrorage();
   }
 }
