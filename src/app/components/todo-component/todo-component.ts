@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TodoService } from './todo-service';
-import { TodoItem } from '../../models/todo.model';
+import { TodoItem, TodoStatus } from '../../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-todo',
@@ -11,44 +12,43 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './todo-component.html',
   styleUrl: './todo-component.css',
 })
-export class TodoComponent implements OnInit {
+export class TodoComponent {
+  private filter$ = new BehaviorSubject<'all' | TodoStatus>('all');
   private todoService = inject(TodoService);
 
-  todos: TodoItem[] = [];
-  newTitle = '';
-  newDueDate?: string;
-  selectedStatus = 'all';
+  todos$: Observable<TodoItem[]> = this.todoService.todos$;
 
-  ngOnInit(): void {
-    this.todos = this.todoService.getTodos();
+  newTitle = '';
+  newDueDate = '';
+  selectedStatus: 'all' | TodoStatus = 'all';
+  protected readonly TodoStatus = TodoStatus;
+
+  setFilter(value: 'all' | TodoStatus) {
+    this.selectedStatus = value;
+    this.filter$.next(value);
   }
 
   addTodo(): void {
     if (!this.newTitle.trim()) return;
 
     this.todoService.addTodo(this.newTitle.trim(), this.newDueDate);
-    this.todos = this.todoService.getTodos();
     this.newTitle = '';
     this.newDueDate = '';
   }
 
   editTitle(id: string, newTitle: string): void {
     this.todoService.editTitle(id, newTitle);
-    this.todos = this.todoService.getTodos();
   }
 
   deleteTodo(id: string): void {
     this.todoService.deleteTodo(id);
-    this.todos = this.todoService.getTodos();
   }
 
-  updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
+  updateStatus(id: string, newStatus: TodoStatus): void {
     this.todoService.updateStatus(id, newStatus);
-    this.todos = this.todoService.getTodos();
   }
 
   updateDueDate(id: string, newDueDate: string): void {
     this.todoService.updateDueDate(id, newDueDate);
-    this.todos = this.todoService.getTodos();
   }
 }

@@ -11,19 +11,20 @@
     <label for="filter">Фильтр:</label>
     <select id="filter" [(ngModel)]="selectedStatus">
       <option value="all">Все</option>
-      <option value="active">Активные</option>
-      <option value="completed">Выполненные</option>
-      <option value="archived">Архив</option>
+      <option [ngValue]="TodoStatus.Active">Активные</option>
+      <option [ngValue]="TodoStatus.Completed">Выполненные</option>
+      <option [ngValue]="TodoStatus.Archived">Архив</option>
     </select>
   </div>
 
+  @defer {
   <ul>
+    @for (todo of (todos$ | async); track todo.id) { @if(todo.status === selectedStatus) {
     <li
-      *ngFor="let todo of todos"
       [ngClass]="{
-      'completed': todo.status === 'completed',
-      'archived': todo.status === 'archived'
-    }"
+            'completed': todo.status === TodoStatus.Completed,
+            'archived': todo.status === TodoStatus.Archived
+          }"
     >
       <div class="task-header">
         <input [(ngModel)]="todo.title" (blur)="editTitle(todo.id, todo.title)" />
@@ -39,9 +40,9 @@
           [(ngModel)]="todo.status"
           (change)="updateStatus(todo.id, todo.status)"
         >
-          <option value="active">Активна</option>
-          <option value="completed">Выполнена</option>
-          <option value="archived">Архив</option>
+          <option [ngValue]="TodoStatus.Active">Активна</option>
+          <option [ngValue]="TodoStatus.Completed">Выполнена</option>
+          <option [ngValue]="TodoStatus.Archived">Архив</option>
         </select>
       </div>
 
@@ -60,5 +61,9 @@
         <span>📅 Дедлайн: {{ todo.dueDate || '—' }}</span>
       </div>
     </li>
+    } }
   </ul>
+  } @loading {
+  <p>Загрузка...</p>
+  }
 </div>

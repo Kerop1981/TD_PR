@@ -1,4 +1,8 @@
-type TodoStatus = 'active' | 'completed' | 'archived';
+export enum TodoStatus {
+  Active = 'active',
+  Completed = 'completed',
+  Archived = 'archived',
+}
 
 export interface TodoItem {
   id: string;

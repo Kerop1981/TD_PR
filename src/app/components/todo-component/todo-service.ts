@@ -1,25 +1,29 @@
-import { Injectable } from '@angular/core';
-import { TodoItem } from '../../models/todo.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { TodoItem, TodoStatus } from '../../models/todo.model';
+import { inject, Injectable } from '@angular/core';
+import { LocalStorageService } from '../../local-storage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TodoService {
-  private todos: TodoItem[] = [];
+  private todosSubject = new BehaviorSubject<TodoItem[]>([]);
+  public todos$: Observable<TodoItem[]> = this.todosSubject.asObservable();
+  private storage = inject(LocalStorageService);
 
-  ngOnlnit() {
+  constructor() {
     this.loadFromLocalStorage();
   }
 
   private loadFromLocalStorage(): void {
-    const data = localStorage.getItem('todos');
-    if (data) {
-      this.todos = JSON.parse(data);
+    const todos = this.storage.get<TodoItem[]>('todos');
+    if (todos) {
+      this.todosSubject.next(todos);
     }
   }
 
-  private saveToLocalStorage(): void {
-    localStorage.setItem('todos', JSON.stringify(this.todos));
+  private saveTodosLocalStorage(): void {
+    this.storage.set('todos', this.todosSubject.getValue());
   }
 
   private generateId(): string {
@@ -27,52 +31,55 @@ export class TodoService {
   }
 
   addTodo(title: string, dueDate?: string): void {
+    const todos = this.todosSubject.getValue();
     const newTodo: TodoItem = {
       id: this.generateId(),
       title,
-      status: 'active',
+      status: TodoStatus.Active,
       createdAt: new Date().toISOString().split('T')[0],
       dueDate: dueDate || '',
     };
-    this.todos.push(newTodo);
-    this.saveToLocalStorage();
+    this.todosSubject.next([...todos, newTodo]);
+    this.saveTodosLocalStorage();
   }
 
-  updateStatus(id: string, newStatus: 'active' | 'completed' | 'archived'): void {
-    const todo = this.todos.find((t) => t.id === id);
-    if (todo) {
-      todo.status = newStatus;
-      this.saveToLocalStorage();
-    }
+  updateStatus(id: string, newStatus: TodoStatus): void {
+    const todos = this.todosSubject
+      .getValue()
+      .map((todo) => (todo.id === id ? { ...todo, status: newStatus } : todo));
+    this.todosSubject.next(todos);
+    this.saveTodosLocalStorage();
   }
 
   editTitle(id: string, newTitle: string): void {
-    const todo = this.todos.find((t) => t.id === id);
-    if (todo) {
-      todo.title = newTitle;
-      this.saveToLocalStorage();
-    }
+    const todos = this.todosSubject
+      .getValue()
+      .map((todo) => (todo.id === id ? { ...todo, title: newTitle } : todo));
+    this.todosSubject.next(todos);
+    this.saveTodosLocalStorage();
   }
 
   deleteTodo(id: string): void {
-    this.todos = this.todos.filter((t) => t.id !== id);
-    this.saveToLocalStorage();
-  }
-
-  getTodos(): TodoItem[] {
-    return this.todos;
+    const todos = this.todosSubject.getValue().filter((todo) => todo.id !== id);
+    this.todosSubject.next(todos);
+    this.saveTodosLocalStorage();
   }
 
   updateDueDate(id: string, newDueDate: string): void {
-    const todo = this.todos.find((t) => t.id === id);
-    if (todo) {
-      todo.dueDate = newDueDate;
-      this.saveToLocalStorage();
-    }
+    const todos = this.todosSubject
+      .getValue()
+      .map((todo) => (todo.id === id ? { ...todo, dueDate: newDueDate } : todo));
+    this.todosSubject.next(todos);
+    this.saveTodosLocalStorage();
   }
 
-  clearCompleted(): void {
-    this.todos = this.todos.filter((todo) => todo.status !== 'completed');
-    this.saveToLocalStorage();
+  private TodosLocalStrorage(): void {
+    localStorage.setItem('todos', JSON.stringify(this.todosSubject.getValue()));
+  }
+
+  saveTodosToLocalStorage(): void {
+    const todos = this.todosSubject.getValue().filter((todo) => todo.status !== 'completed');
+    this.todosSubject.next(todos);
+    this.TodosLocalStrorage();
   }
 }

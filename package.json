@@ -1,6 +1,7 @@
 {
   "name": "todo-project",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,10 +9,11 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
+    "lint:fix": "npx lint-staged",
+    "lint:check": "ng lint",
     "format": "prettier --write \"src/**/*.{ts,html,css,scss}\"",
     "prepare": "husky install"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "^20.0.0",
     "@angular/compiler": "^20.0.0",
@@ -44,7 +46,12 @@
     "prettier": "^3.6.0",
     "typescript": "~5.8.2",
     "typescript-eslint": "8.34.1"
+  },
+  "lint-staged": {
+    "*.{ts,html,css,scss}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   }
-
-
 }
